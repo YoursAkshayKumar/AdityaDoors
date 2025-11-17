@@ -80,10 +80,27 @@ export default function Navbar() {
                 </Link>
 
                 {/* Dropdown Menu */}
-                {item.dropdown && activeDropdown === item.name && (
+                {/* {item.dropdown && activeDropdown === item.name && (
                   <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg z-50 animate-fade-in">
                     <div className="py-2">
                       {item.dropdownItems?.map((dropdownItem, j) => (
+                        <Link
+                          key={dropdownItem.name}
+                          href={dropdownItem.href}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gold transition-colors duration-300 animate-slide-in-right"
+                          style={{ animationDelay: `${j * 0.1}s` }}
+                        >
+                          {dropdownItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )} */}
+
+                {item.dropdown && item.dropdownItems && activeDropdown === item.name && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg z-50 animate-fade-in">
+                    <div className="py-2">
+                      {item.dropdownItems.map((dropdownItem, j) => (
                         <Link
                           key={dropdownItem.name}
                           href={dropdownItem.href}
