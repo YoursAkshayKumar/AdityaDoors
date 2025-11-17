@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom colors */
+.bg-cream-50 {
+  /* background-color: #f9f7f2; */
+  background-color: white;
+}
+
+.bg-brown-900 {
+  background-color: #3c2a21;
+}
+
+.text-gold {
+  color: #c8a45c;
+}
+
+.border-gold {
+  border-color: #c8a45c;
+}
+
+.bg-gold {
+  background-color: #c8a45c;
+}
+
+.hover\:bg-gold-dark:hover {
+  background-color: #b08d3c;
+}
+
+.home-btn {
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.dark {
+  --background: 24 10% 10%;
+  --foreground: 0 0% 100%;
+  --card: 24 10% 10%;
+  --card-foreground: 0 0% 100%;
+  --popover: 24 10% 10%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 36 60% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 24 9% 15%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 24 9% 15%;
+  --muted-foreground: 24 5% 64%;
+  --accent: 24 9% 15%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 24 9% 15%;
+  --input: 24 9% 15%;
+  --ring: 36 60% 55%;
+}
+
+/* Animation classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out forwards;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s infinite;
+}
+
+.flip-container {
+  perspective: 1000px; /* Gives 3D effect */
+}
+
+.flip-inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-container:hover .flip-inner {
+  transform: rotateY(180deg); /* Flip horizontally */
+  color: #c8a45c;
+}
+
+/* WhatsApp Button Animations */
+@keyframes whatsappPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+.whatsapp-pulse {
+  animation: whatsappPulse 2s infinite;
+}
