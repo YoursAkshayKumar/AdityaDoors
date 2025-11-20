@@ -10,7 +10,7 @@ import WhatsAppChatWidget from "@/components/whatsapp-chat-widget";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Windazo - Modern Window Blinds and Shutters",
+  title: "Aditya Doors - Modern Window Blinds and Shutters",
   description: "Quality window blinds and shutters for your home",
 };
 

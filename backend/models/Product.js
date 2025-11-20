@@ -19,7 +19,7 @@ const productSchema = mongoose.Schema({
   },
   children:{
     type:String,
-    required: true,
+    required: false,
     trim:true,
   },
   tags: [String],
@@ -67,7 +67,7 @@ const productSchema = mongoose.Schema({
   },
   unit: {
     type: String,
-    required: true,
+    required: false,
   },
   quantity: {
     type: Number,
@@ -75,6 +75,7 @@ const productSchema = mongoose.Schema({
   },
   type:String,
   itemInfo:String,
+  onSale:String,
   status: {
     type: String,
     default: 'active',

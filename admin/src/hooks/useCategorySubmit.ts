@@ -36,9 +36,9 @@ const useCategorySubmit = () => {
         description: data?.description,
         children: categoryChildren,
       };
-      if(categoryChildren.length === 0){
-        return notifyError('Children is required')
-      }
+      // if(categoryChildren.length === 0){
+      //   return notifyError('Children is required')
+      // }
       const res = await addCategory({ ...category_data });
       if ("error" in res) {
         if ("data" in res.error) {

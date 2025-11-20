@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-xl font-bold mb-4 text-gold">
-              <Image src="/logo/aditya-doors-logo.png" alt="logo" width={100} height={100} />
+              <Image src="/logo/aditya-doors-logo.png" alt="logo" width={80} height={80} />
             </h3>
             <p className="text-white mb-4">
               Quality window blinds and shutters for your home. We provide the
@@ -76,9 +76,9 @@ export default function Footer() {
 
           <div>
             <h4 className="text-lg font-semibold mb-4 text-gold">Contact Us</h4>
-            <p className="text-white mb-2">123 Window Street, Blind City</p>
-            <p className="text-white mb-2">0 (800) 255-52-38</p>
-            <p className="text-white mb-2">info@Adityadoor.com</p>
+            <p className="text-white mb-2">Binoli road near Canara bank Sardhana, Meerut 250342</p>
+            <p className="text-white mb-2">+91 - 9997297123</p>
+            <p className="text-white mb-2">info@adityadoors.in</p>
           </div>
         </div>
 

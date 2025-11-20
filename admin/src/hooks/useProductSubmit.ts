@@ -51,7 +51,7 @@ const useProductSubmit = () => {
       sku: data.sku,
       title: data.title,
       parent: parent,
-      children: children,
+      children: children || undefined,
       tags: tags,
       image: img,
       originalPrice: Number(data.price),
@@ -61,9 +61,10 @@ const useProductSubmit = () => {
       description: data.description,
       brand: brand,
       category: category,
-      unit: data.unit,
+      unit: data.unit || undefined,
       quantity: Number(data.quantity),
       colors: colors,
+      onSale: data.isOnSale,
     };
     console.log('productData-------------------..>', productData)
     if (!img) {
@@ -103,7 +104,7 @@ const useProductSubmit = () => {
       sku: data.sku,
       title: data.title,
       parent: parent,
-      children: children,
+      children: children || undefined,
       tags: tags,
       image: img,
       originalPrice: Number(data.price),
@@ -113,9 +114,10 @@ const useProductSubmit = () => {
       description: data.description,
       brand: brand,
       category: category,
-      unit: data.unit,
+      unit: data.unit || undefined,
       quantity: Number(data.quantity),
       colors: colors,
+      onSale: data.isOnSale,
     };
 
     const res = await editProduct({ id: id, data: productData })

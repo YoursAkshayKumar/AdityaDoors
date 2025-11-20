@@ -34,7 +34,7 @@ const ProductSubmit = () => {
     colors,
   } = useProductSubmit();
 
-  console.log('related image',relatedImages)
+  console.log("related image", relatedImages);
   return (
     <form onSubmit={handleSubmit(handleSubmitProduct)}>
       <div className="grid grid-cols-12 gap-6 mb-6">
@@ -92,14 +92,18 @@ const ProductSubmit = () => {
             </div>
           </div>
 
-          {/* product type and brands start */}
-          <ProductTypeBrand
-            register={register}
-            errors={errors}
-            control={control}
-            setSelectBrand={setBrand}
-          />
-          {/* product type and brands end */}
+           <div className="bg-white px-8 py-8 rounded-md mb-6">
+              <h4 className="text-[18px] mb-4">Sale Options</h4>
+
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register("onSale")}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm text-black">On Sale</span>
+              </label>
+            </div>
 
           {/* product variations start */}
           <ProductVariants
@@ -135,14 +139,6 @@ const ProductSubmit = () => {
             {/* tags start */}
             <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 mb-5">
               <Tags tags={tags} setTags={setTags} />
-            </div>
-          </div>
-
-          <div className="bg-white px-8 py-8 rounded-md mb-6">
-            <p className="mb-5 text-base text-black">Product Colors</p>
-            {/* tags start */}
-            <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 mb-5">
-              <Colors colors={colors} setColors={setColors} />
             </div>
           </div>
         </div>

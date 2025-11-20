@@ -106,7 +106,7 @@ export default function ProductCategory({
                   </span>
                 </div>
               </div>
-              {item.children.length > 0 && (
+              {item.children && item.children.length > 0 && (
                 <div
                   className={`py-1 ml-8 ${open === item._id ? "block" : "hidden"}`}
                 >

@@ -7,19 +7,19 @@ const features = [
     icon: <ProductionIcon />,
     title: "Own production",
     description:
-      "Proin rhoncus tincidunt tortor. Aenean non malesuada est, commodo dapibus ipsum.",
+      "We design and build everything in-house. This allows us to maintain strict quality control and offer fully customizable wood solutions tailored to your specific needs.",
   },
   {
     icon: <MeasurementIcon />,
     title: "Free measurement",
     description:
-      "Cras sagittis lectus eu congue, sit amet imperdiet est congue eget. Ut tempus bibendum.",
+      "Let us handle the technical details. We provide free, professional measurements to guarantee accuracy before a single piece of wood is cut.",
   },
   {
     icon: <InstallationIcon />,
     title: "Quick installation",
     description:
-      "Quis enim nisi, fringilla non sodales et, hendrerit vel mauris. Donec eget tempus mauris.",
+      "Experience a hassle-free transformation. Our skilled team handles the heavy lifting and assembly, delivering a polished result in record time.",
   },
 ];
 

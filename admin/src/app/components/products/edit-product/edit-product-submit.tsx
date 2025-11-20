@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useEffect } from "react";
 import useProductSubmit from "@/hooks/useProductSubmit";
 import ErrorMsg from "../../common/error-msg";
 import FormField from "../form-field";
@@ -31,7 +32,7 @@ const EditProductSubmit = ({ id }: { id: string }) => {
     setRelatedImages,
     setColors,
     colors,
-    handleEditProduct
+    handleEditProduct,
   } = useProductSubmit();
 
   // decide what to render
@@ -110,19 +111,19 @@ const EditProductSubmit = ({ id }: { id: string }) => {
               </div>
             </div>
 
+            <div className="bg-white px-8 py-8 rounded-md mb-6">
+              <h4 className="text-[18px] mb-4">Sale Options</h4>
 
-            {/* product type and brands start */}
-            <ProductTypeBrand
-              register={register}
-              errors={errors}
-              control={control}
-              setSelectBrand={setBrand}
-              default_value={{
-                brand: product.brand.name,
-                unit: product.unit,
-              }}
-            />
-            {/* product type and brands end */}
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  defaultChecked={Boolean(product.isOnSale)}
+                  {...register("onSale")}
+                  className="w-4 h-4"
+                />
+                <span className="text-sm text-black">On Sale</span>
+              </label>
+            </div>
 
             {/* product variations start */}
             <ProductVariants

@@ -3,6 +3,7 @@ const {
   addProduct,
   addAllProducts,
   getShowingProducts,
+  getPopularProducts,
   getDiscountProduct,
   getSingleProduct,
   getRelatedProducts,
@@ -22,6 +23,8 @@ router.post("/add-all", addAllProducts);
 router.get("/all", getAllProducts);
 // get showing products
 router.get("/show", getShowingProducts);
+//get Popular Products
+router.get("/popular-products", getPopularProducts);
 // get discount products
 router.get("/discount", getDiscountProduct);
 router.get("/relatedProduct", getRelatedProducts);
