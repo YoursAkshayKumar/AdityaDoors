@@ -2,8 +2,6 @@ import { ISidebarMenus } from "./../types/menu-types";
 import {
   Dashboard,
   Categories,
-  Coupons,
-  Orders,
   Pages,
   Products,
   Profile,
@@ -27,7 +25,7 @@ const sidebar_menu: Array<ISidebarMenus> = [
     title: "Products",
     subMenus: [
       { title: "Product List", link: "/product-list" },
-      { title: "Product Grid", link: "/product-grid" },
+      // { title: "Product Grid", link: "/product-grid" },
       { title: "Add Product", link: "/add-product" }
     ],
   },
@@ -39,49 +37,36 @@ const sidebar_menu: Array<ISidebarMenus> = [
   },
   {
     id: 4,
-    icon: Orders,
-    link: "/orders",
-    title: "Orders",
+    icon: Leaf,
+    link: "/blogs",
+    title: "Blogs",
+    subMenus: [
+      { title: "BLogs List", link: "/blogs-list" },
+      // { title: "Product Grid", link: "/product-grid" },
+      { title: "Add Blog", link: "/add-blog" }
+    ]
   },
   {
     id: 5,
-    icon: Leaf,
-    link: "/brands",
-    title: "Brand",
-  },
-  {
-    id: 6,
-    icon: Coupons,
-    link: "/coupon",
-    title: "Coupons",
-  },
-  {
-    id: 7,
     icon: Profile,
     link: "/profile",
     title: "Profile",
   },
   {
-    id: 8,
+    id: 6,
     icon: Setting,
     link: "#",
     title: "Online store",
   },
   {
-    id: 9,
-    icon: StuffUser,
-    link: "/our-staff",
-    title: "Our Staff",
-  },
-  {
-    id: 10,
+    id: 7,
     icon: Pages,
     link: "/dashboard",
     title: "Pages",
     subMenus: [
-      { title: "Register", link: "/register" },
-      { title: "Login", link: "/login" },
-      { title: "Forgot Password", link: "/forgot-password" }
+      { title: "About Us", link: "/about-us" },
+      // { title: "Login", link: "/login" },
+      // { title: "Forgot Password", link: "/forgot-password" }
     ],
   },
 ];

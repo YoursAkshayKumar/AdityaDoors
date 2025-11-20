@@ -43,10 +43,10 @@ export default function Sidebar({sideMenu,setSideMenu}:IProps) {
             <div className="py-4 pb-8 px-8 border-b border-gray h-[78px]">
               <Link href="/dashboard">
                 <Image
-                  className="w-[80px]"
-                  width={80}
+                  className="w-[65px]"
+                  width={60}
                   height={40}
-                  src="/assets/img/logo/Uncut-logo.png"
+                  src="/assets/img/logo/aditya-doors-logo.png"
                   alt="logo"
                   priority
                 />
