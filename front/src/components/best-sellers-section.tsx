@@ -5,9 +5,33 @@ import { useEffect, useState } from "react";
 import { useScrollAnimation } from "./hooks/use-scroll-animation";
 import { Image } from "antd";
 
+// =======================================================
+// 1. ADDED: TypeScript Interface for Product Data
+// This defines the expected structure, preventing the 'never' type error.
+// =======================================================
+interface Product {
+  // CRITICAL FIX: The unique MongoDB ID used for the React key
+  _id: string; 
+  title: string;
+  image: string;
+  description: string;
+  onSale?: boolean; // Used in the conditional rendering check
+  // Add other properties you use here for better type safety:
+  // price: number;
+  // category: { name: string; id: string; };
+}
+// =======================================================
+
 export default function BestSellersSection() {
   const [sectionRef, isVisible] = useScrollAnimation();
-  const [products, setProducts] = useState([]);
+  
+  // =======================================================
+  // 2. FIXED: Explicitly set the type to Product[] for the state
+  // This resolves the Type error: Property '_id' does not exist on type 'never'.
+  // =======================================================
+  const [products, setProducts] = useState<Product[]>([]);
+  // =======================================================
+  
   const [loading, setLoading] = useState(true);
 
   // Replace with your backend URL
@@ -19,7 +43,8 @@ export default function BestSellersSection() {
       try {
         const res = await fetch(API_URL);
         const data = await res.json();
-        setProducts(data.products);
+        // Since data.products matches the Product[] type, this is safe
+        setProducts(data.products); 
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {
@@ -59,7 +84,8 @@ export default function BestSellersSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {products.map((product, index) => (
               <div
-                key={product._id}
+                // CRITICAL FIX: The key is now correctly typed as product._id (string)
+                key={product._id} 
                 className={`transition-all duration-700 ${
                   isVisible
                     ? "opacity-100 transform translate-y-0"
@@ -68,6 +94,7 @@ export default function BestSellersSection() {
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <div className="relative">
+                  {/* Note: TypeScript will now check if 'onSale' exists */}
                   {product?.onSale && (
                     <div className="absolute -top-4 -right-4 z-10 bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center">
                       <span className="text-sm font-medium">sale</span>
