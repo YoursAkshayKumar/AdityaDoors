@@ -91,16 +91,16 @@ export default function HeroCarousel() {
                   className="flex space-x-4 animate-fade-in-up"
                   style={{ animationDelay: "0.7s" }}
                 >
-                  <button className="flex items-center bg-brown-900 hover:bg-gray-900 text-white px-6 py-3 rounded-none transition-transform duration-300 hover:translate-y-[-4px] home-btn">
+                  <a href="/contacts" className="flex items-center bg-brown-900 hover:bg-gray-900 text-white px-6 py-3 rounded-none transition-transform duration-300 hover:translate-y-[-4px] home-btn">
                     MAKE ORDER
                     <MoveRight className="ml-2 h-4 w-6" />
-                  </button>
-                  <button
+                  </a>
+                  <a href="/contacts"
                     // variant="outline"
                     className="flex items-center bg-gold hover:bg-gold-dark text-white border-gold hover:border-gold px-6 py-3 rounded-none transition-transform duration-300 hover:translate-y-[-4px] home-btn"
                   >
                     READ MORE <MoveRight className="ml-2 h-4 w-6" />
-                  </button>
+                  </a>
                 </div>
               </div>
             ))}

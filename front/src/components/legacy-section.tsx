@@ -48,18 +48,18 @@ export default function LegacySection() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
               Our Legacy of <span className="text-gold">Excellence</span>
             </h2>
-            <p className="text-gray-600">
-              For over 25 years, Windazo has been at the forefront of window
-              treatment innovation. Our journey began with a simple mission: to
-              create beautiful, functional window solutions that transform
-              spaces and enhance lives.
-            </p>
-            <p className="text-gray-600">
-              Today, we continue to uphold our commitment to quality
-              craftsmanship, innovative design, and exceptional customer
-              service. Every product we create is a testament to our dedication
-              to excellence and our passion for enhancing your home.
-            </p>
+            <p className="text-gray-600">At Aditya Doors, we believe that every entrance tells a story 
+              With decades of craftsmanship and innovation, we have established ourselves as a trusted 
+              name in the world of Premium Doors, Door Frames, Modular Kitchens, Wardrobes, and Custom 
+              Home Furnishings. Driven by a passion for quality and an eye for design, we specialize in 
+              manufacturing aesthetically appealing and highly durable wooden products using premium quality 
+              of Chemically treated and Seasoned Teakwood, Pinewood, Sal wood, and other top-grade woods.</p>
+            <p className="text-gray-600">Whether you're building a new space or upgrading an existing one, 
+              our products add timeless elegance and long-lasting functionality to any environment. What 
+              sets us apart is our customization, commitment to excellence, and a customer-first approach 
+              From architects and interior designers to individual homeowners, we work closely with every 
+              client to bring their vision to life-delivering not just doors, but a gateway to a beautifully 
+              furnished home. Welcome to Aditya Doors - where design meets durability, and every detail matters.</p>
             <div className="pt-4">
               <button className="flex items-center bg-brown-900 hover:bg-gray-900 text-white px-6 py-3 rounded-none transition-transform duration-300 hover:translate-y-[-4px] home-btn">
                 OUR STORY <ChevronRight className="ml-2 h-4 w-4" />

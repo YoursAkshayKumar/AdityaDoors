@@ -29,26 +29,28 @@ export default function CatalogueSection() {
           >
             <div className="text-gold text-sm font-medium">Own Production</div>
             <h2 className="text-3xl md:text-4xl font-bold text-[#3c2a21]">
-              Creating Home
-              <br />
-              Warm and Comfort
+             Why Choose Us?
             </h2>
             <p className="text-gray-600 max-w-md">
-              Curabitur accumsan iaculis neque, sit amet scelerisque eros.
-              Phasellus hendrerit neque a augue scelerisque, eu mollis mauris
-              bibendum. Etiam vitae metus id eros facilisis.
+              <ul className="list-group">
+                <li className="list-group-item"><b>Exceptional Craftsmanship:</b> Handcrafted pieces built to last.</li>
+                <li className="list-group-item"><b>Unique Designs:</b> Style that blends modern elegance with classic warmth.</li>
+                <li className="list-group-item"><b>Sustainable Quality:</b> Mindfully sourced materials for peace of mind.</li>
+              </ul>
             </p>
 
-            <div className="flex items-center space-x-2 text-gold hover:text-gold-dark transition-colors duration-300 cursor-pointer">
+            <a  href="catelogue/aditya-doors-product-catelogue.pdf"
+                download 
+                className="flex items-center space-x-2 text-gold hover:text-gold-dark transition-colors duration-300 cursor-pointer">
               <FileText className="h-5 w-5" />
               <span className="font-medium">Download Our Catalogue</span>
-            </div>
+            </a>
 
-            <div className="pt-4">
+            <a href="/about" className="pt-4">
               <button className="flex bg-gold hover:bg-gold-dark text-white px-8 py-3 rounded-none transition-all duration-300 home-btn">
                 READ MORE <ArrowRight className="ml-2 h-4 w-4" />
               </button>
-            </div>
+            </a>
           </div>
 
           {/* Right Image */}
