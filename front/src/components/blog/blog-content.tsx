@@ -40,7 +40,7 @@ export default function BlogContent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
   const [selectedTag, setSelectedTag] = useState("");
-  const { data, isLoading, isError } = useGetAllBlogsQuery();
+  const { data, isLoading, isError } = useGetAllBlogsQuery({});
 
   const blogItems = (data?.result || []) as BlogApiItem[];
   const uiPosts = useMemo(() => blogItems.filter(b => b.status === "Show").map((b, idx) => toUiPost(b, idx)), [blogItems]);
