@@ -155,7 +155,7 @@ const EditProductSubmit = ({ id }: { id: string }) => {
                   default_value={{
                     parent: product.category.name,
                     id: product.category.id,
-                    children: product.children,
+                    children: product.children || "",
                   }}
                 />
                 <Tags

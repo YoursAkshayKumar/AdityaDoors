@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useParams } from "next/navigation";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,8 +17,9 @@ const schema = Yup.object().shape({
   ),
 });
 
-const ForgetPasswordPage = ({ params }: { params: { token: string } }) => {
-  const token = params.token;
+const ForgetPasswordPage = () => {
+  const params = useParams();
+  const token = params.token as string;
   const [adminConfirmForgotPassword, {}] =
     useAdminConfirmForgotPasswordMutation();
   // react hook form

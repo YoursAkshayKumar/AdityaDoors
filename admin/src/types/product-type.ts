@@ -5,7 +5,7 @@ export interface IProduct {
   sku: string;
   title: string;
   parent: string;
-  children: string;
+  children?: string;
   tags: string[];
   image: string;
   originalPrice: number;
@@ -22,7 +22,7 @@ export interface IProduct {
     name:string;
     id:string;
   };
-  unit: string;
+  unit?: string;
   quantity: number;
   colors: string[];
   type?: string;
@@ -40,7 +40,7 @@ export interface IAddProduct {
   sku: string;
   title: string;
   parent: string;
-  children: string;
+  children?: string;
   tags: string[];
   image: string;
   originalPrice: number;
@@ -56,10 +56,11 @@ export interface IAddProduct {
     name:string;
     id:string;
   };
-  unit: string;
+  unit?: string;
   quantity: number;
   colors: string[];
   type?: string;
   itemInfo?: string;
   status?: string;
+  isOnSale?: boolean;
 }

@@ -18,9 +18,15 @@ function TableHead({ title }: { title: string }) {
   );
 }
 
-const BlogTable = ({ cls }: { cls?: string }) => {
+const BlogTable = ({ cls, searchTerm }: { cls?: string; searchTerm?: string }) => {
   const { data: blogs, isError, isLoading } = useGetAllBlogsQuery();
-  const paginationData = usePagination(blogs?.result || [], 5);
+  const allItems = (blogs?.result || []) as any[];
+  const filtered = searchTerm
+    ? allItems.filter((it) =>
+        (it.title || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : allItems;
+  const paginationData = usePagination(filtered, 5);
   const { currentItems, handlePageClick, pageCount } = paginationData;
 
   let content = null;
@@ -78,7 +84,7 @@ const BlogTable = ({ cls }: { cls?: string }) => {
 
         <div className="flex justify-between items-center flex-wrap">
           <p className="mb-0 text-tiny">
-            Showing 1-{currentItems.length} of {blogs?.result.length}
+            Showing 1-{currentItems.length} of {filtered.length}
           </p>
           <div className="pagination py-3 flex justify-end items-center">
             <Pagination handlePageClick={handlePageClick} pageCount={pageCount} />

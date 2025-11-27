@@ -1,12 +1,9 @@
-import { useEffect } from "react";
-import Loading from "../common/loading";
+"use client";
+import Loading from "@/app/components/common/loading";
 import useAuthCheck from "@/hooks/use-auth-check";
-import { useRouter, redirect } from "next/navigation";
-import Cookies from "js-cookie";
 
 const AuthCom = ({ children }: { children: React.ReactNode }) => {
-  const { authChecked, user } = useAuthCheck();
-  const router = useRouter();
+  const { authChecked } = useAuthCheck();
   
   let content;
   if (!authChecked) {

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { FadeLoader, BarLoader, ScaleLoader } from "react-spinners";
 

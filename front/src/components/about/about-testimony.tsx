@@ -46,6 +46,7 @@ const testimonials = [
 export default function AboutTestimonials() {
   const [sectionRef, isVisible] = useScrollAnimation();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,6 +55,10 @@ export default function AboutTestimonials() {
       );
     }, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const nextSlide = () => {
@@ -94,7 +99,7 @@ export default function AboutTestimonials() {
                 <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
                   <div
                     className={`bg-cream-50 p-8 rounded-lg relative transition-all duration-1000 ${
-                      isVisible
+                      mounted && isVisible
                         ? "opacity-100 transform translate-y-0"
                         : "opacity-0 transform translate-y-12"
                     }`}
@@ -147,7 +152,7 @@ export default function AboutTestimonials() {
           <button
             onClick={prevSlide}
             className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white p-3 rounded-full shadow-lg border border-gray-200 text-gray-600 hover:text-gold transition-all duration-300 z-10 ${
-              isVisible
+              mounted && isVisible
                 ? "opacity-100 transform translate-x-0"
                 : "opacity-0 transform -translate-x-8"
             }`}
@@ -159,7 +164,7 @@ export default function AboutTestimonials() {
           <button
             onClick={nextSlide}
             className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white p-3 rounded-full shadow-lg border border-gray-200 text-gray-600 hover:text-gold transition-all duration-300 z-10 ${
-              isVisible
+              mounted && isVisible
                 ? "opacity-100 transform translate-x-0"
                 : "opacity-0 transform translate-x-8"
             }`}
