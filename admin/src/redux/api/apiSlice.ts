@@ -15,7 +15,7 @@ export const apiSlice = createApi({
           }
         }
       } catch (error) {
-        console.error("Error parsing user info:", error);
+        // Error parsing user info - silently fail
       }
       return headers;
     },
@@ -41,5 +41,9 @@ export const apiSlice = createApi({
     "SingleProduct",
     "AllBlogs",
     "getBlog",
+    "AllTestimonials",
+    "getTestimonial",
+    "AllInquiries",
+    "getInquiry",
   ],
 });

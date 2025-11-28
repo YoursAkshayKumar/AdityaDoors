@@ -6,6 +6,10 @@ import couponSlice from './features/coupon/couponSlice';
 import orderSlice from './features/order/orderSlice';
 import wishlistSlice from './features/wishlist-slice';
 import productSlice from './features/productSlice';
+// Import testimonial API to register endpoints
+import './testimonial/testimonialApi';
+// Import inquiry API to register endpoints
+import './inquiry/inquiryApi';
 
 
 export const store = configureStore({

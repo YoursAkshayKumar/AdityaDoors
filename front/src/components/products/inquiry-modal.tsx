@@ -5,20 +5,21 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import { X, MessageSquare, User, Mail, Phone, Send } from "lucide-react";
 import { Button } from "antd";
-// import { Button } from "@/components/ui/button"
+import { useAddInquiryMutation } from "@/redux/inquiry/inquiryApi";
+import { notifySuccess, notifyError } from "@/utils/toast.js";
 
 interface Product {
-  id: number;
+  id: string | number;
   name: string;
   category: string;
   price: number;
   originalPrice?: number;
-  rating: number;
-  reviews: number;
-  image: string;
-  isOnSale: boolean;
-  isFeatured: boolean;
-  description: string;
+  rating?: number;
+  reviews?: number;
+  image?: string;
+  isOnSale?: boolean;
+  isFeatured?: boolean;
+  description?: string;
 }
 
 interface InquiryModalProps {
@@ -32,6 +33,7 @@ export default function InquiryModal({
   isOpen,
   onClose,
 }: InquiryModalProps) {
+  const [addInquiry, { isLoading: isSubmitting }] = useAddInquiryMutation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -70,22 +72,42 @@ export default function InquiryModal({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Inquiry submitted:", { ...formData, productId: product.id });
-    alert(
-      "Thank you for your inquiry! Our team will contact you within 24 hours."
-    );
-    onClose();
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      message: "",
-      inquiryType: "general",
-    });
+    
+    try {
+      const inquiryData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        subject: formData.subject,
+        message: formData.message,
+        inquiryType: formData.inquiryType,
+        product: {
+          id: product.id.toString(),
+          name: product.name,
+          category: product.category,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          image: product.image,
+        },
+      };
+
+      await addInquiry(inquiryData).unwrap();
+      notifySuccess("Thank you for your inquiry! Our team will contact you within 24 hours.");
+      onClose();
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+        inquiryType: "general",
+      });
+    } catch (error: any) {
+      notifyError(error?.data?.message || "Failed to submit inquiry. Please try again.");
+    }
   };
 
   return (
@@ -116,7 +138,7 @@ export default function InquiryModal({
             <div className="bg-[#3c2a21] rounded-lg p-4">
               <h3 className="font-semibold text-gold mb-1">{product.name}</h3>
               <p className="text-gray-300 text-sm">
-                {product.category} • ${product.price}
+                {product.category} • ₹{product.price.toLocaleString()}
               </p>
             </div>
           </div>
@@ -233,7 +255,9 @@ export default function InquiryModal({
               {/* Submit Button */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
-                  typeof="submit"
+                  type="submit"
+                  loading={isSubmitting}
+                  disabled={isSubmitting}
                   className="flex-1 bg-gold hover:bg-gold-dark text-white py-3 rounded-lg transition-all duration-300 flex items-center justify-center"
                 >
                   <Send className="mr-2 h-5 w-5" />

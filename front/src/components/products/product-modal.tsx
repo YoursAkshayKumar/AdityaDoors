@@ -30,6 +30,8 @@ interface Product {
   isOnSale: boolean;
   isFeatured: boolean;
   description: string;
+  specifications?: { [key: string]: string };
+  features?: string[];
 }
 
 interface ProductModalProps {
@@ -47,25 +49,9 @@ const getExtendedProductData = (product: Product) => ({
     `/product-${product.id}-3.png`,
     `/product-${product.id}-4.png`,
   ],
-  fullDescription: `${product.description}. This premium product is crafted with the finest materials and designed to meet the highest standards of quality and durability. Perfect for modern homes and commercial spaces, it combines functionality with aesthetic appeal.`,
-  specifications: {
-    Material: product.category.includes("Door")
-      ? "Premium Steel/Wood"
-      : "High-grade Aluminum",
-    Finish: "Powder Coated",
-    Warranty: "5-10 Years",
-    Installation: "Professional Installation Included",
-    Maintenance: "Low Maintenance Required",
-    Certification: "ISO 9001 Certified",
-  },
-  features: [
-    "Premium Quality Materials",
-    "Weather Resistant",
-    "Easy Installation",
-    "Long-lasting Durability",
-    "Modern Design",
-    "Energy Efficient",
-  ],
+  fullDescription: product.fullDescription || product.description,
+  specifications: product.specifications,
+  features: product.features,
   inStock: true,
   stockCount: Math.floor(Math.random() * 50) + 10,
   shippingInfo: {
@@ -87,6 +73,25 @@ export default function ProductModal({
 
   const extendedProduct = getExtendedProductData(product);
 
+  // Check if specifications and features exist
+  const hasSpecifications = extendedProduct.specifications && Object.keys(extendedProduct.specifications).length > 0;
+  const hasFeatures = extendedProduct.features && extendedProduct.features.length > 0;
+
+  // Available tabs based on data
+  const availableTabs = [
+    "description",
+    ...(hasSpecifications ? ["specifications"] : []),
+    ...(hasFeatures ? ["features"] : []),
+    "reviews"
+  ];
+
+  // Update activeTab if current tab is not available
+  useEffect(() => {
+    if (!availableTabs.includes(activeTab)) {
+      setActiveTab("description");
+    }
+  }, [activeTab, availableTabs]);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -106,7 +111,6 @@ export default function ProductModal({
   };
 
   const handleAddToCart = () => {
-    console.log(`Added ${quantity} of ${product.name} to cart`);
     alert(`Added ${quantity} ${product.name}(s) to cart!`);
   };
 
@@ -420,21 +424,19 @@ export default function ProductModal({
             <div className="px-3 sm:px-6">
               {/* Tab Navigation */}
               <div className="flex space-x-4 sm:space-x-8 border-b border-gray-200 overflow-x-auto">
-                {["description", "specifications", "features", "reviews"].map(
-                  (tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`py-3 sm:py-4 px-1 sm:px-2 font-medium text-xs sm:text-sm capitalize transition-colors duration-300 border-b-2 whitespace-nowrap ${
-                        activeTab === tab
-                          ? "border-gold text-gold"
-                          : "border-transparent text-gray-600 hover:text-gray-900"
-                      }`}
-                    >
-                      {tab}
-                    </button>
-                  )
-                )}
+                {availableTabs.map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`py-3 sm:py-4 px-1 sm:px-2 font-medium text-xs sm:text-sm capitalize transition-colors duration-300 border-b-2 whitespace-nowrap ${
+                      activeTab === tab
+                        ? "border-gold text-gold"
+                        : "border-transparent text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
               </div>
 
               {/* Tab Content */}
@@ -447,7 +449,7 @@ export default function ProductModal({
                   </div>
                 )}
 
-                {activeTab === "specifications" && (
+                {activeTab === "specifications" && hasSpecifications && (
                   <div className="space-y-2 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-2 sm:gap-4">
                     {Object.entries(extendedProduct.specifications).map(
                       ([key, value]) => (
@@ -467,7 +469,7 @@ export default function ProductModal({
                   </div>
                 )}
 
-                {activeTab === "features" && (
+                {activeTab === "features" && hasFeatures && (
                   <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-1 md:grid-cols-2 sm:gap-4">
                     {extendedProduct.features.map((feature, index) => (
                       <div key={index} className="flex items-center space-x-3">

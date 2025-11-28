@@ -120,6 +120,21 @@ export default function AddProductModal({
     }));
   };
 
+  const addSpecification = () => {
+    setFormData((prev) => ({
+      ...prev,
+      specifications: { ...prev.specifications, newSpecification: "" }, // Add a new empty specification
+    }));
+  };
+
+  const removeSpecification = (keyToRemove: string) => {
+    setFormData((prev) => {
+      const newSpecifications = { ...prev.specifications };
+      delete newSpecifications[keyToRemove];
+      return { ...prev, specifications: newSpecifications };
+    });
+  };
+
   const handleArrayChange = (
     field: "images" | "features",
     index: number,
@@ -197,10 +212,9 @@ export default function AddProductModal({
         images: formData.images.filter((img) => img.trim()),
         features: formData.features.filter((feature) => feature.trim()),
         specifications: Object.fromEntries(
-          //   Object.entries(formData.specifications).filter(([_, value]) =>
-          Object.entries(formData.specifications).filter(([value]) =>
-            value.trim()
-          )
+          Object.entries(formData.specifications).filter(
+            ([key, value]) => key.trim() && value.trim(),
+          ),
         ),
       };
 
@@ -457,22 +471,41 @@ export default function AddProductModal({
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(formData.specifications).map(([key, value]) => (
-                  <div key={key}>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                      {key}
-                    </label>
-                    <input
-                      type="text"
-                      value={value}
-                      onChange={(e) =>
-                        handleSpecificationChange(key, e.target.value)
-                      }
-                      placeholder={`Enter ${key.toLowerCase()}`}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent text-sm"
-                    />
+                  <div key={key} className="flex items-center space-x-2 mb-2">
+                    <div className="flex-1">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">
+                        {key}
+                      </label>
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) =>
+                          handleSpecificationChange(key, e.target.value)
+                        }
+                        placeholder={`Enter ${key.toLowerCase()}`}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent text-sm"
+                      />
+                    </div>
+                    <Button
+                      typeof="button"
+                      onClick={() => removeSpecification(key)}
+                      size="small"
+                      className="p-2 mt-4"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
                   </div>
                 ))}
               </div>
+              <Button
+                typeof="button"
+                onClick={addSpecification}
+                size="small"
+                className="mt-2"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Specification
+              </Button>
             </div>
           </div>
         );

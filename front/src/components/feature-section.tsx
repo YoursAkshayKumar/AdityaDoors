@@ -1,3 +1,5 @@
+"use client";
+
 import ProductionIcon from "./icons/production-icon";
 import MeasurementIcon from "./icons/measurement-icon";
 import InstallationIcon from "./icons/installation-icon";

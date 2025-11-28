@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import slugify from "slugify";
 import { useForm } from "react-hook-form";
 import { useRouter } from 'next/navigation';
@@ -21,7 +21,61 @@ const useProductSubmit = () => {
   const [children, setChildren] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
+  const [features, setFeatures] = useState<string[]>([]);
+  const [specifications, setSpecifications] = useState<Record<string, string>>({});
+  const [fullDescription, setFullDescription] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(true);
+  
+  // Use refs to track latest state for form submission
+  const featuresRef = useRef<string[]>([]);
+  const specificationsRef = useRef<Record<string, string>>({});
+  
+  // Wrapper functions that update both state and refs immediately
+  // These ensure refs always have the latest value, even before React state updates
+  const setFeaturesWithRef = (value: string[] | ((prev: string[]) => string[])) => {
+    if (typeof value === 'function') {
+      // For functional updates, we need to read current state from ref to get absolute latest
+      const currentFeatures = featuresRef.current;
+      const newValue = value(currentFeatures);
+      featuresRef.current = newValue; // Update ref immediately
+      setFeatures(newValue); // Then update state
+    } else {
+      featuresRef.current = value; // Update ref immediately
+      setFeatures(value); // Then update state
+    }
+  };
+  
+  const setSpecificationsWithRef = (value: Record<string, string> | ((prev: Record<string, string>) => Record<string, string>)) => {
+    console.log('setSpecificationsWithRef called', { isFunction: typeof value === 'function' });
+    
+    if (typeof value === 'function') {
+      // For functional updates, React provides the latest state in the function parameter
+      // We need to update both state and ref synchronously
+      setSpecifications((prev) => {
+        console.log('setSpecifications callback in wrapper', { prev, prevKeys: Object.keys(prev) });
+        const newValue = value(prev);
+        console.log('New value calculated', { newValue, newKeys: Object.keys(newValue) });
+        // Update ref immediately with the new value, before React state update completes
+        specificationsRef.current = newValue;
+        console.log('Ref updated', { refValue: specificationsRef.current, refKeys: Object.keys(specificationsRef.current) });
+        return newValue;
+      });
+    } else {
+      // For direct value updates, update ref first, then state
+      console.log('Direct value update', { value, keys: Object.keys(value) });
+      specificationsRef.current = value;
+      setSpecifications(value);
+    }
+  };
+  
+  // Update refs whenever state changes (as backup, in case state is updated elsewhere)
+  useEffect(() => {
+    featuresRef.current = features;
+  }, [features]);
+  
+  useEffect(() => {
+    specificationsRef.current = specifications;
+  }, [specifications]);
 
   const router = useRouter();
 
@@ -45,7 +99,18 @@ const useProductSubmit = () => {
 
   // handle submit product
   const handleSubmitProduct = async (data: any) => {
-    console.log('data', data)
+    // Use the latest values from refs which are updated synchronously
+    const currentFeatures = featuresRef.current;
+    const currentSpecifications = specificationsRef.current;
+
+    console.log('=== ADD PRODUCT SUBMISSION ===');
+    console.log('Ref specifications:', currentSpecifications);
+    console.log('State specifications:', specifications);
+    console.log('Ref count:', Object.keys(currentSpecifications).length);
+    console.log('State count:', Object.keys(specifications).length);
+    console.log('Ref keys:', Object.keys(currentSpecifications));
+    console.log('State keys:', Object.keys(specifications));
+
     // product data
     const productData: IAddProduct = {
       sku: data.sku,
@@ -65,8 +130,10 @@ const useProductSubmit = () => {
       quantity: Number(data.quantity),
       colors: colors,
       isOnSale: data.isOnSale,
+      features: currentFeatures,
+      specifications: currentSpecifications,
+      fullDescription: data.fullDescription || undefined,
     };
-    console.log('productData-------------------..>', productData)
     if (!img) {
       return notifyError("Product image is required");
     }
@@ -99,25 +166,57 @@ const useProductSubmit = () => {
   };
   // handle edit product
   const handleEditProduct = async (data: any, id: string) => {
+    // Validate required fields
+    if (!img || !img.trim()) {
+      return notifyError("Product image is required");
+    }
+    if (!category.name || !category.id || !category.name.trim() || !category.id.trim()) {
+      return notifyError("Category is required. Please select a valid category.");
+    }
+    if (!parent || !parent.trim()) {
+      return notifyError("Parent category is required");
+    }
+    if (Number(data.discount) > Number(data.price)) {
+      return notifyError("Product price must be greater than discount");
+    }
+    if (!id || !id.trim()) {
+      return notifyError("Product ID is invalid");
+    }
+
+    // Use the latest values from refs which are updated synchronously
+    const currentFeatures = featuresRef.current;
+    const currentSpecifications = specificationsRef.current;
+
+    console.log('=== EDIT PRODUCT SUBMISSION ===');
+    console.log('Ref specifications:', currentSpecifications);
+    console.log('State specifications:', specifications);
+    console.log('Ref count:', Object.keys(currentSpecifications).length);
+    console.log('State count:', Object.keys(specifications).length);
+    console.log('Ref keys:', Object.keys(currentSpecifications));
+    console.log('State keys:', Object.keys(specifications));
+
     // product data
     const productData: IAddProduct = {
       sku: data.sku,
       title: data.title,
       parent: parent,
-      children: children || undefined,
-      tags: tags,
+      children: children && children.trim() ? children : undefined,
+      tags: tags.length > 0 ? tags : [],
       image: img,
       originalPrice: Number(data.price),
       price: Number(data.price),
-      discount: Number(data.discount),
-      relatedImages: relatedImages,
+      discount: Number(data.discount) || 0,
+      relatedImages: relatedImages.length > 0 ? relatedImages : [],
       description: data.description,
-      brand: brand,
+      brand: brand.name ? brand : undefined,
       category: category,
       unit: data.unit || undefined,
       quantity: Number(data.quantity),
-      colors: colors,
-      isOnSale: data.isOnSale,
+      colors: colors.length > 0 ? colors : [],
+      isOnSale: data.isOnSale || false,
+      features: currentFeatures,
+      specifications: currentSpecifications,
+      fullDescription: data.fullDescription || undefined,
     };
 
     const res = await editProduct({ id: id, data: productData })
@@ -163,6 +262,12 @@ const useProductSubmit = () => {
     isSubmitted,
     relatedImages,
     colors,
+    features,
+    setFeatures: setFeaturesWithRef,
+    specifications,
+    setSpecifications: setSpecificationsWithRef,
+    fullDescription,
+    setFullDescription,
   };
 };
 

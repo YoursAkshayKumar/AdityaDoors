@@ -48,18 +48,34 @@ const sidebar_menu: Array<ISidebarMenus> = [
   },
   {
     id: 5,
+    icon: Reviews,
+    link: "/testimonials-list",
+    title: "Testimonials",
+    subMenus: [
+      { title: "Testimonials List", link: "/testimonials-list" },
+      { title: "Add Testimonial", link: "/add-testimonial" }
+    ]
+  },
+  {
+    id: 6,
+    icon: Reviews,
+    link: "/inquiries-list",
+    title: "Inquiries",
+  },
+  {
+    id: 7,
     icon: Profile,
     link: "/profile",
     title: "Profile",
   },
   {
-    id: 6,
+    id: 8,
     icon: Setting,
     link: "#",
     title: "Online store",
   },
   {
-    id: 7,
+    id: 9,
     icon: Pages,
     link: "/dashboard",
     title: "Pages",

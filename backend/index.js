@@ -16,6 +16,8 @@ const cloudinaryRoutes = require("./routes/cloudinaryRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const brandRoutes = require("./routes/brandRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const testimonialRoutes = require("./routes/testimonialRoutes");
+const inquiryRoutes = require("./routes/inquiryRoutes");
 
 // app init
 const app = express();
@@ -38,6 +40,8 @@ app.use('/api/user-order', userOrderRoute);
 app.use("/api/cloudinary", cloudinaryRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/blog", blogRoutes);
+app.use("/api/testimonial", testimonialRoutes);
+app.use("/api/inquiry", inquiryRoutes);
 
 // root route
 app.get("/", (req, res) => res.send("Apps worked successfully"));

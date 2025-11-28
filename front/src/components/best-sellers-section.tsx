@@ -46,7 +46,7 @@ export default function BestSellersSection() {
         // Since data.products matches the Product[] type, this is safe
         setProducts(data.products); 
       } catch (error) {
-        console.error("Failed to fetch products:", error);
+        // Failed to fetch products
       } finally {
         setLoading(false);
       }

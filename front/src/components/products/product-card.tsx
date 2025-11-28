@@ -38,7 +38,9 @@ export default function ProductCard({
   const router = useRouter();
 
   const handleViewDetails = () => {
-    // window.open(`/products/${product.id}`, "_blank");
+    if (!product.id) {
+      return;
+    }
     router.push(`/products/${product.id}`);
   };
 
@@ -60,9 +62,10 @@ export default function ProductCard({
           <Image
             src={product.image}
             alt={product.name}
-            className="w-full"
-            // width={280}
-            // height={255}
+            width={400}
+            height={256}
+            className="w-full object-cover"
+            style={{ width: "auto", height: "auto" }}
           />
           {/* <div className="text-gray-400 text-center">
             <div className="w-20 h-20 bg-gray-300 rounded-lg mx-auto mb-2"></div>

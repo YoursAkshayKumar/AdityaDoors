@@ -73,13 +73,49 @@ const productSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  colors: {
+    type: [String],
+    required: false,
+    default: [],
+  },
+  brand: {
+    name: {
+      type: String,
+      required: false,
+    },
+    id: {
+      type: ObjectId,
+      ref: "Brand",
+      required: false,
+    }
+  },
   type:String,
   itemInfo:String,
   onSale:String,
+  isOnSale: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   status: {
     type: String,
     default: 'active',
     enum: ['active', 'inActive'],
+  },
+  features: {
+    type: [String],
+    required: false,
+    default: [],
+  },
+  specifications: {
+    type: mongoose.Schema.Types.Mixed,
+    required: false,
+    default: {},
+  },
+  fullDescription: {
+    type: String,
+    required: false,
+    trim: true,
   },
 },{
   timestamps: true

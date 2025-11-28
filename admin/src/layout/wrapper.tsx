@@ -14,7 +14,8 @@ const Wrapper = ({ children }: { children: React.ReactNode }) => {
     if (!localAuth) {
       router.push("/login");
     }
-  }, [router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount, router is stable
   return (
     <div className="tp-main-wrapper bg-slate-100 h-screen">
       <Sidebar sideMenu={sideMenu} setSideMenu={setSideMenu} />

@@ -1,10 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useScrollAnimation } from "../hooks/use-scroll-animation";
-import { Search, Filter, Plus } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import ProductCard from "./product-card";
-import AddProductModal from "./add-product-modal";
-import { Button } from "antd";
 import { useGetShowingProductsQuery } from "@/redux/features/productApi";
 import { useRouter } from "next/navigation";
 
@@ -57,26 +55,13 @@ export default function ProductsContent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [sortBy, setSortBy] = useState("featured");
-  const [showAddProductModal, setShowAddProductModal] = useState(false);
 
   // Fetch products using RTK Query
   const { data, isLoading, isError, error, refetch } =
     useGetShowingProductsQuery(undefined);
 
-  // Debug: Log the response
-  console.log("API Response:", data);
-  console.log("Loading:", isLoading);
-  console.log("Error:", isError, error);
-
   // Extract products from response
   const products: Product[] = data?.products || data || [];
-  console.log("Products array:", products);
-
-  // Temporary: Use mock data if no products loaded (for testing UI)
-  const hasMockData = products.length === 0 && !isLoading;
-  if (hasMockData) {
-    console.warn("No products from API, using mock data for testing");
-  }
 
   // Transform MongoDB product to ProductCard format
   const transformProduct = (product: Product): TransformedProduct => {
@@ -160,18 +145,6 @@ export default function ProductsContent() {
 
     return filtered;
   }, [products, searchTerm, selectedCategory, sortBy]);
-
-  // Handle new product addition
-  const handleProductAdded = async (newProduct: any) => {
-    try {
-      // Refetch products list after adding new product
-      await refetch();
-      alert("Product added successfully!");
-    } catch (err) {
-      console.error('Error refreshing products:', err);
-      alert("Product added, but failed to refresh the list. Please reload the page.");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -285,23 +258,14 @@ export default function ProductsContent() {
 
           {/* Products Grid */}
           <div className="lg:w-3/4">
-            <div className="mb-6 flex justify-between items-center">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {selectedCategory} ({filteredProducts.length} products)
-                </h2>
-                <div className="flex items-center space-x-2 text-gray-600 mt-1">
-                  <Filter className="h-5 w-5" />
-                  <span>Showing {filteredProducts.length} results</span>
-                </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {selectedCategory} ({filteredProducts.length} products)
+              </h2>
+              <div className="flex items-center space-x-2 text-gray-600 mt-1">
+                <Filter className="h-5 w-5" />
+                <span>Showing {filteredProducts.length} results</span>
               </div>
-              <Button
-                onClick={() => setShowAddProductModal(true)}
-                className="bg-gold hover:bg-gold-dark text-white px-6 py-3 rounded-lg transition-all duration-300 flex items-center"
-              >
-                <Plus className="h-5 w-5 mr-2" />
-                Add Product
-              </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -331,15 +295,6 @@ export default function ProductsContent() {
           </div>
         </div>
       </div>
-
-      {/* Add Product Modal */}
-      {showAddProductModal && (
-        <AddProductModal
-          isOpen={showAddProductModal}
-          onClose={() => setShowAddProductModal(false)}
-          onProductAdded={handleProductAdded}
-        />
-      )}
     </section>
   );
 }

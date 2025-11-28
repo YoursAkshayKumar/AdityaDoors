@@ -24,7 +24,7 @@ export default function AppointmentSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission here
-    console.log("Form submitted:", formData);
+    // Form submitted
     // Reset form
     setFormData({ name: "", phone: "" });
     // Show success message or redirect

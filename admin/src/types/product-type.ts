@@ -28,6 +28,9 @@ export interface IProduct {
   type?: string;
   itemInfo?: string;
   status: string;
+  features?: string[];
+  specifications?: Record<string, string>;
+  fullDescription?: string;
 }
 
 export interface ProductResponse {
@@ -63,4 +66,7 @@ export interface IAddProduct {
   itemInfo?: string;
   status?: string;
   isOnSale?: boolean;
+  features?: string[];
+  specifications?: Record<string, string>;
+  fullDescription?: string;
 }

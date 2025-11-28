@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-// import { Button } from "@/components/ui/button"
 import { MoveRight } from "lucide-react";
 import WindowShuttersImage1 from "./window-shutters-image1";
 import { Image } from "antd";
@@ -98,7 +97,6 @@ export default function HeroCarousel() {
                     <MoveRight className="ml-2 h-4 w-6" />
                   </a>
                   <a href="/contacts"
-                    // variant="outline"
                     className="flex items-center bg-gold hover:bg-gold-dark text-white border-gold hover:border-gold px-6 py-3 rounded-none transition-transform duration-300 hover:translate-y-[-4px] home-btn"
                   >
                     READ MORE <MoveRight className="ml-2 h-4 w-6" />
@@ -112,7 +110,7 @@ export default function HeroCarousel() {
           <div className="relative h-[400px] md:h-[500px] flex justify-center">
             {carouselItems.map((item, index) => (
               <div
-                key={item.id}
+                key={item.id || index}
                 className={`absolute inset-0 transition-all duration-700 ${
                   index === currentSlide
                     ? "opacity-100 transform scale-100"
@@ -125,6 +123,8 @@ export default function HeroCarousel() {
                   alt="bg"
                   src={item?.src}
                   style={{ height: "450px" }}
+                  width={600}
+                  height={450}
                 />
               </div>
             ))}

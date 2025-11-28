@@ -11,6 +11,8 @@ import ProductVariants from "../add-product/product-variants";
 import ProductImgUpload from "../add-product/product-img-upload";
 import Tags from "../add-product/tags";
 import ProductCategory from "../../category/product-category";
+import Features from "../add-product/features";
+import Specifications from "../add-product/specifications";
 
 const EditProductSubmit = ({ id }: { id: string }) => {
   const { data: product, isError, isLoading } = useGetProductQuery(id);
@@ -33,7 +35,46 @@ const EditProductSubmit = ({ id }: { id: string }) => {
     setColors,
     colors,
     handleEditProduct,
+    features,
+    setFeatures,
+    specifications,
+    setSpecifications,
   } = useProductSubmit();
+
+  // Initialize all state when product loads
+  useEffect(() => {
+    if (product) {
+      // Initialize image
+      if (product.image) {
+        setImg(product.image);
+      }
+      // Initialize related images
+      if (product.relatedImages && product.relatedImages.length > 0) {
+        setRelatedImages(product.relatedImages);
+      }
+      // Initialize tags
+      if (product.tags && product.tags.length > 0) {
+        setTags(product.tags);
+      }
+      // Initialize colors
+      if (product.colors && product.colors.length > 0) {
+        setColors(product.colors);
+      }
+      // Initialize brand
+      if (product.brand) {
+        setBrand(product.brand);
+      }
+      // Initialize features (always set, even if empty array)
+      const productFeatures = Array.isArray(product.features) ? product.features : (product.features ? [product.features] : []);
+      setFeatures(productFeatures);
+      // Initialize specifications (always set, even if empty object)
+      const productSpecs = product.specifications && typeof product.specifications === 'object' && !Array.isArray(product.specifications) 
+        ? product.specifications 
+        : {};
+      setSpecifications(productSpecs);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product]);
 
   // decide what to render
   let content = null;
@@ -46,7 +87,10 @@ const EditProductSubmit = ({ id }: { id: string }) => {
   }
   if (!isLoading && !isError && product) {
     content = (
-      <form onSubmit={handleSubmit((data) => handleEditProduct(data, id))}>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit((data) => handleEditProduct(data, id))(e);
+      }}>
         <div className="grid grid-cols-12 gap-6 mb-6">
           {/* left side */}
           <div className="col-span-12 xl:col-span-8 2xl:col-span-9">
@@ -133,6 +177,27 @@ const EditProductSubmit = ({ id }: { id: string }) => {
               default_value={product.relatedImages}
             />
             {/* product variations end */}
+
+            {/* Features and Specifications */}
+            <div className="bg-white px-8 py-8 rounded-md mb-6">
+              <h4 className="text-[22px] mb-4">Product Features</h4>
+              <Features
+                key={`features-${product._id}`}
+                features={features}
+                setFeatures={setFeatures}
+                default_value={product.features}
+              />
+            </div>
+
+            <div className="bg-white px-8 py-8 rounded-md mb-6">
+              <h4 className="text-[22px] mb-4">Product Specifications</h4>
+              <Specifications
+                key={`specifications-${product._id}`}
+                specifications={specifications}
+                setSpecifications={setSpecifications}
+                default_value={product.specifications}
+              />
+            </div>
           </div>
 
           {/* right side */}
@@ -152,11 +217,15 @@ const EditProductSubmit = ({ id }: { id: string }) => {
                   setCategory={setCategory}
                   setParent={setParent}
                   setChildren={setChildren}
-                  default_value={{
-                    parent: product.category.name,
-                    id: product.category.id,
-                    children: product.children || "",
-                  }}
+                  default_value={
+                    product.category && product.category.name && product.category.id
+                      ? {
+                          parent: product.category.name,
+                          id: product.category.id,
+                          children: product.children || "",
+                        }
+                      : undefined
+                  }
                 />
                 <Tags
                   tags={tags}

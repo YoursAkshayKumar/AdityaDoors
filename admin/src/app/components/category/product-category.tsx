@@ -24,19 +24,60 @@ export default function ProductCategory({
 }: IPropType) {
   const [open, setOpen] = React.useState<string>("");
   const { data: categories, isError, isLoading } = useGetAllCategoriesQuery();
-  const [selectedCategory, setSelectedCategory] = useState<string[]>(
-    default_value ? [default_value.parent, default_value.children] : []
-  );
+  const [currentParent, setCurrentParent] = useState<string>("");
+  const [currentChildren, setCurrentChildren] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string[]>(() => {
+    if (default_value) {
+      const items = [default_value.parent];
+      if (default_value.children && default_value.children.trim()) {
+        items.push(default_value.children);
+      }
+      return items;
+    }
+    return [];
+  });
+  
+  const prevDefaultValue = React.useRef<{ parent: string; id: string; children: string } | undefined>(undefined);
 
   useEffect(() => {
-    if (default_value?.parent && default_value.id && default_value.children) {
+    // Only update if default_value has actually changed (by value, not just reference)
+    if (default_value?.parent && default_value.id) {
       const { id, parent, children } = default_value;
-      setCategory({ id: id, name: parent });
-      setParent(parent);
-      setChildren(children);
+      const prev = prevDefaultValue.current;
+      
+      // Check if values have actually changed
+      const hasChanged = !prev || 
+        prev.id !== id || 
+        prev.parent !== parent || 
+        (prev.children || "") !== (children || "");
+      
+      if (hasChanged) {
+        setCategory({ id: id, name: parent });
+        setParent(parent);
+        setCurrentParent(parent);
+        if (children && children.trim()) {
+          setChildren(children);
+          setCurrentChildren(children);
+          setSelectedCategory([parent, children].filter((c) => c && c.trim()));
+        } else {
+          setChildren("");
+          setCurrentChildren("");
+          setSelectedCategory([parent].filter((c) => c && c.trim()));
+        }
+        prevDefaultValue.current = { id, parent, children: children || "" };
+      }
+    } else if (default_value === undefined && prevDefaultValue.current) {
+      // Reset if default_value is removed
+      setCategory({ name: '', id: '' });
+      setParent("");
+      setCurrentParent("");
+      setChildren("");
+      setCurrentChildren("");
+      setSelectedCategory([]);
+      prevDefaultValue.current = undefined;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [default_value?.id, default_value?.parent, default_value?.children]);
 
   // handleCategory
   const handleCategory = (value: string, title: string) => {
@@ -44,23 +85,35 @@ export default function ProductCategory({
     if (value && title) {
       setCategory({ id: value, name: title });
       setParent(title);
+      setCurrentParent(title);
     }
-    if (title) {
+    if (title && title.trim()) {
       if (selectedCategory.includes(title)) {
-        setSelectedCategory(selectedCategory.filter((c) => c !== title));
+        const newSelected = selectedCategory.filter((c) => c !== title);
+        setSelectedCategory(newSelected);
+        // If removing parent category, also clear children
+        if (title === currentParent) {
+          setChildren("");
+          setCurrentChildren("");
+          if (currentChildren) {
+            setSelectedCategory(newSelected.filter((c) => c !== currentChildren));
+          }
+        }
       } else {
-        setSelectedCategory([...selectedCategory, title]);
+        setSelectedCategory([...selectedCategory.filter((c) => c.trim()), title]);
       }
     }
   };
 
   // handle sub category
   const handleSubCategory = (subCate: string) => {
+    if (!subCate || !subCate.trim()) return;
     setChildren(subCate);
+    setCurrentChildren(subCate);
     if (selectedCategory.includes(subCate)) {
-      setSelectedCategory(selectedCategory.filter((c) => c !== subCate));
+      setSelectedCategory(selectedCategory.filter((c) => c !== subCate && c.trim()));
     } else {
-      setSelectedCategory([...selectedCategory, subCate]);
+      setSelectedCategory([...selectedCategory.filter((c) => c.trim()), subCate]);
     }
   };
 
@@ -129,12 +182,28 @@ export default function ProductCategory({
   return (
     <>
       <div className="tags-input-wrapper mb-2">
-        {selectedCategory.map((c, i) => (
-          <span key={i} className="tag">
-            {c}
-            <b onClick={() => handleCategory("", c)}>×</b>
-          </span>
-        ))}
+        {selectedCategory.filter((c) => c && c.trim()).map((c, i) => {
+          const isParent = c === currentParent;
+          const isChild = c === currentChildren;
+          return (
+            <span key={i} className="tag">
+              {c}
+              <b onClick={() => {
+                if (isParent) {
+                  setCategory({ name: '', id: '' });
+                  setParent("");
+                  setCurrentParent("");
+                  setChildren("");
+                  setCurrentChildren("");
+                } else if (isChild) {
+                  setChildren("");
+                  setCurrentChildren("");
+                }
+                setSelectedCategory(selectedCategory.filter((cat) => cat !== c && cat.trim()));
+              }}>×</b>
+            </span>
+          );
+        })}
       </div>
       <div className="h-80 overflow-y-scroll overflow-x-hidden">
         <div>{content}</div>

@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useScrollAnimation } from "../hooks/use-scroll-animation";
 import {
   Star,
-  ShoppingCart,
-  Heart,
   Plus,
   Minus,
   Truck,
@@ -30,8 +28,6 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
   const [sectionRef, isVisible] = useScrollAnimation();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [activeTab, setActiveTab] = useState("description");
   const [showInquiryModal, setShowInquiryModal] = useState(false);
 
   // Fetch product from API
@@ -54,26 +50,9 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     description: data.description,
     inStock: data.status === 'active' && data.quantity > 0,
     stockCount: data.quantity,
-    specifications: {
-      SKU: data.sku,
-      Category: data.parent,
-      Status: data.status,
-      Quantity: data.quantity,
-      Discount: `${data.discount}%`,
-      Material: "Premium Quality",
-      Warranty: "5-10 Years",
-      Installation: "Professional Installation Available",
-    },
-    features: [
-      "Premium Quality Materials",
-      "Weather Resistant",
-      "Easy Installation",
-      "Long-lasting Durability",
-      "Modern Design",
-      "Energy Efficient",
-      "Corrosion Resistant",
-      "Low Maintenance",
-    ],
+    specifications: data.specifications,
+    features: data.features,
+    fullDescription: data.fullDescription || data.description,
     shippingInfo: {
       freeShipping: data.price > 5000,
       estimatedDelivery: "3-5 business days",
@@ -81,15 +60,28 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
     },
   } : null;
 
+  // Check if specifications and features exist
+  const hasSpecifications = product?.specifications && Object.keys(product.specifications).length > 0;
+  const hasFeatures = product?.features && product.features.length > 0;
+
+  // Available tabs based on data
+  const availableTabs = ["description", ...(hasSpecifications ? ["specifications"] : []), ...(hasFeatures ? ["features"] : [])];
+
+  // Active tab state
+  const [activeTab, setActiveTab] = useState("description");
+
+  // Update activeTab when product data loads to ensure it's valid
+  useEffect(() => {
+    if (product) {
+      // If current tab is not available, switch to description
+      if (!availableTabs.includes(activeTab)) {
+        setActiveTab("description");
+      }
+    }
+  }, [product, availableTabs, activeTab]);
+
   const handleQuantityChange = (change: number) => {
     setQuantity(Math.max(1, Math.min(10, quantity + change)));
-  };
-
-  const handleAddToCart = () => {
-    if (product) {
-      console.log(`Added ${quantity} of ${product.name} to cart`);
-      alert(`Added ${quantity} ${product.name}(s) to cart!`);
-    }
   };
 
   const nextImage = () => {
@@ -265,20 +257,10 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
             <div className="space-y-6">
               {/* Product Header */}
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="mb-2">
                   <span className="text-sm text-gold font-medium uppercase tracking-wide">
                     {product.category}
                   </span>
-                  <button
-                    onClick={() => setIsFavorite(!isFavorite)}
-                    className={`p-2 rounded-full transition-colors duration-300 ${
-                      isFavorite
-                        ? "bg-red-500 text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-red-500 hover:text-white"
-                    }`}
-                  >
-                    <Heart className="h-5 w-5" />
-                  </button>
                 </div>
 
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -364,16 +346,11 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Button
-                    onClick={handleAddToCart}
-                    disabled={!product.inStock}
-                    className="bg-gold hover:bg-gold-dark text-white py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => setShowInquiryModal(true)}
+                    className="bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-lg transition-all duration-300"
                   >
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Add to Cart
-                  </Button>
-                  <Button className="bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-lg transition-all duration-300">
                     Buy Now
                   </Button>
                   <Button
@@ -410,15 +387,17 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Shield className="h-5 w-5 text-gold" />
-                  <div>
-                    <p className="font-medium">Warranty Included</p>
-                    <p className="text-sm text-gray-600">
-                      {product.specifications.Warranty} manufacturer warranty
-                    </p>
+                {product.specifications?.Warranty && (
+                  <div className="flex items-center space-x-3">
+                    <Shield className="h-5 w-5 text-gold" />
+                    <div>
+                      <p className="font-medium">Warranty Included</p>
+                      <p className="text-sm text-gray-600">
+                        {product.specifications.Warranty} manufacturer warranty
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -429,7 +408,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
               {/* Tab Navigation */}
               <div className="border-b border-gray-200">
                 <div className="flex space-x-8 px-6 overflow-x-auto">
-                  {["description", "specifications", "features"].map((tab) => (
+                  {availableTabs.map((tab) => (
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
@@ -455,7 +434,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                   </div>
                 )}
 
-                {activeTab === "specifications" && (
+                {activeTab === "specifications" && hasSpecifications && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {Object.entries(product.specifications).map(([key, value]) => (
                       <div
@@ -469,7 +448,7 @@ export default function ProductDetail({ productId }: ProductDetailProps) {
                   </div>
                 )}
 
-                {activeTab === "features" && (
+                {activeTab === "features" && hasFeatures && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {product.features.map((feature, index) => (
                       <div key={index} className="flex items-center space-x-3">
