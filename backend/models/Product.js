@@ -107,11 +107,18 @@ const productSchema = mongoose.Schema({
     required: false,
     default: [],
   },
-  specifications: {
-    type: mongoose.Schema.Types.Mixed,
-    required: false,
-    default: {},
-  },
+  specifications: [{
+    label: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    value: {
+      type: String,
+      required: false,
+      trim: true,
+    }
+  }],
   fullDescription: {
     type: String,
     required: false,

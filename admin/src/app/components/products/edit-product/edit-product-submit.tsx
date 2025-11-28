@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useProductSubmit from "@/hooks/useProductSubmit";
 import ErrorMsg from "../../common/error-msg";
 import FormField from "../form-field";
@@ -11,9 +11,13 @@ import ProductVariants from "../add-product/product-variants";
 import ProductImgUpload from "../add-product/product-img-upload";
 import Tags from "../add-product/tags";
 import ProductCategory from "../../category/product-category";
+import Features from "../add-product/features";
+import Specifications, { SpecificationsRef } from "../add-product/specifications";
 
 const EditProductSubmit = ({ id }: { id: string }) => {
   const { data: product, isError, isLoading } = useGetProductQuery(id);
+  const specificationsRef = useRef<SpecificationsRef>(null);
+  
   const {
     handleSubmit,
     register,
@@ -33,6 +37,10 @@ const EditProductSubmit = ({ id }: { id: string }) => {
     setColors,
     colors,
     handleEditProduct,
+    features,
+    setFeatures,
+    specifications,
+    setSpecifications,
   } = useProductSubmit();
 
   // Initialize all state when product loads
@@ -58,6 +66,14 @@ const EditProductSubmit = ({ id }: { id: string }) => {
       if (product.brand) {
         setBrand(product.brand);
       }
+      // Initialize features
+      if (product.features && Array.isArray(product.features)) {
+        setFeatures(product.features);
+      }
+      // Initialize specifications
+      if (product.specifications && Array.isArray(product.specifications)) {
+        setSpecifications(product.specifications);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
@@ -75,6 +91,8 @@ const EditProductSubmit = ({ id }: { id: string }) => {
     content = (
       <form onSubmit={(e) => {
         e.preventDefault();
+        // Force add any pending specification before submission
+        specificationsRef.current?.handleAddSpecification();
         handleSubmit((data) => handleEditProduct(data, id))(e);
       }}>
         <div className="grid grid-cols-12 gap-6 mb-6">
@@ -163,6 +181,27 @@ const EditProductSubmit = ({ id }: { id: string }) => {
               default_value={product.relatedImages}
             />
             {/* product variations end */}
+
+            {/* Product Features */}
+            <div className="bg-white px-8 py-8 rounded-md mb-6">
+              <h4 className="text-[22px] mb-4">Product Features</h4>
+              <Features
+                features={features}
+                setFeatures={setFeatures}
+                default_value={product.features}
+              />
+            </div>
+
+            {/* Product Specifications */}
+            <div className="bg-white px-8 py-8 rounded-md mb-6">
+              <h4 className="text-[22px] mb-4">Product Specifications</h4>
+              <Specifications
+                ref={specificationsRef}
+                specifications={specifications}
+                setSpecifications={setSpecifications}
+                default_value={product.specifications}
+              />
+            </div>
           </div>
 
           {/* right side */}

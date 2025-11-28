@@ -29,7 +29,7 @@ export interface IProduct {
   itemInfo?: string;
   status: string;
   features?: string[];
-  specifications?: Record<string, string>;
+  specifications?: Array<{ label: string; value: string }>;
   fullDescription?: string;
 }
 
@@ -67,6 +67,6 @@ export interface IAddProduct {
   status?: string;
   isOnSale?: boolean;
   features?: string[];
-  specifications?: Record<string, string>;
+  specifications?: Array<{ label: string; value: string }>;
   fullDescription?: string;
 }

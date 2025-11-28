@@ -12,6 +12,11 @@ type IBCType = {
   id: string;
 };
 
+export interface ISpecification {
+  label: string;
+  value: string;
+}
+
 const useProductSubmit = () => {
   const [img, setImg] = useState<string>("");
   const [relatedImages, setRelatedImages] = useState<string[]>([]);
@@ -21,6 +26,8 @@ const useProductSubmit = () => {
   const [children, setChildren] = useState<string>('');
   const [tags, setTags] = useState<string[]>([]);
   const [colors, setColors] = useState<string[]>([]);
+  const [features, setFeatures] = useState<string[]>([]);
+  const [specifications, setSpecifications] = useState<ISpecification[]>([]);
   const [fullDescription, setFullDescription] = useState<string>("");
   const [isSubmitted, setIsSubmitted] = useState<boolean>(true);
   
@@ -47,6 +54,11 @@ const useProductSubmit = () => {
 
   // handle submit product
   const handleSubmitProduct = async (data: any) => {
+    // Clean specifications: only include items with both label and value
+    const cleanSpecifications = specifications.filter(
+      (spec) => spec.label.trim() !== "" && spec.value.trim() !== ""
+    );
+    
     // product data
     const productData: IAddProduct = {
       sku: data.sku,
@@ -60,12 +72,14 @@ const useProductSubmit = () => {
       discount: Number(data.discount),
       relatedImages: relatedImages,
       description: data.description,
-      brand: brand,
+      brand: brand.name && brand.id ? brand : undefined,
       category: category,
       unit: data.unit || undefined,
       quantity: Number(data.quantity),
       colors: colors,
       isOnSale: data.isOnSale,
+      features: features.length > 0 ? features : undefined,
+      specifications: cleanSpecifications.length > 0 ? cleanSpecifications : undefined,
       fullDescription: data.fullDescription || undefined,
     };
     if (!img) {
@@ -117,6 +131,11 @@ const useProductSubmit = () => {
       return notifyError("Product ID is invalid");
     }
 
+    // Clean specifications: only include items with both label and value
+    const cleanSpecifications = specifications.filter(
+      (spec) => spec.label.trim() !== "" && spec.value.trim() !== ""
+    );
+
     // product data
     const productData: IAddProduct = {
       sku: data.sku,
@@ -136,6 +155,8 @@ const useProductSubmit = () => {
       quantity: Number(data.quantity),
       colors: colors.length > 0 ? colors : [],
       isOnSale: data.isOnSale || false,
+      features: features.length > 0 ? features : undefined,
+      specifications: cleanSpecifications.length > 0 ? cleanSpecifications : undefined,
       fullDescription: data.fullDescription || undefined,
     };
 
@@ -182,6 +203,10 @@ const useProductSubmit = () => {
     isSubmitted,
     relatedImages,
     colors,
+    features,
+    setFeatures,
+    specifications,
+    setSpecifications,
     fullDescription,
     setFullDescription,
   };

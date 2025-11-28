@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import useProductSubmit from "@/hooks/useProductSubmit";
 import DescriptionTextarea from "./description-textarea";
 import OfferDatePicker from "./offer-date-picker";
@@ -11,8 +11,12 @@ import ProductCategory from "../../category/product-category";
 import Tags from "./tags";
 import FormField from "../form-field";
 import Colors from "./colors";
+import Features from "./features";
+import Specifications, { SpecificationsRef } from "./specifications";
 
 const ProductSubmit = () => {
+  const specificationsRef = useRef<SpecificationsRef>(null);
+  
   const {
     handleSubmit,
     handleSubmitProduct,
@@ -32,11 +36,20 @@ const ProductSubmit = () => {
     setRelatedImages,
     setColors,
     colors,
+    features,
+    setFeatures,
+    specifications,
+    setSpecifications,
   } = useProductSubmit();
 
   console.log("related image", relatedImages);
   return (
-    <form onSubmit={handleSubmit(handleSubmitProduct)}>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      // Force add any pending specification before submission
+      specificationsRef.current?.handleAddSpecification();
+      handleSubmit(handleSubmitProduct)(e);
+    }}>
       <div className="grid grid-cols-12 gap-6 mb-6">
         {/* left side */}
         <div className="col-span-12 xl:col-span-8 2xl:col-span-9">
@@ -112,6 +125,22 @@ const ProductSubmit = () => {
             relatedImages={relatedImages}
           />
           {/* product variations end */}
+
+          {/* Product Features */}
+          <div className="bg-white px-8 py-8 rounded-md mb-6">
+            <h4 className="text-[22px] mb-4">Product Features</h4>
+            <Features features={features} setFeatures={setFeatures} />
+          </div>
+
+          {/* Product Specifications */}
+          <div className="bg-white px-8 py-8 rounded-md mb-6">
+            <h4 className="text-[22px] mb-4">Product Specifications</h4>
+            <Specifications
+              ref={specificationsRef}
+              specifications={specifications}
+              setSpecifications={setSpecifications}
+            />
+          </div>
         </div>
 
         {/* right side */}
