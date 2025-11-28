@@ -5,11 +5,20 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { Image } from "antd";
 import { useGetActiveTestimonialsQuery } from "@/redux/testimonial/testimonialApi";
 
+interface Testimonial {
+  _id: string;
+  name: string;
+  role?: string;
+  quote: string;
+  image?: string;
+  rating?: number;
+}
+
 export default function TestimonialsSection() {
-  const { data: testimonialsData, isLoading, isError } = useGetActiveTestimonialsQuery();
+  const { data: testimonialsData, isLoading, isError } = useGetActiveTestimonialsQuery(undefined);
   
   // Handle different possible response structures
-  const testimonials = React.useMemo(() => {
+  const testimonials = React.useMemo((): Testimonial[] => {
     if (!testimonialsData) return [];
     
     // Check if response has result property

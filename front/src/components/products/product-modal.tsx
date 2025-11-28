@@ -49,7 +49,7 @@ const getExtendedProductData = (product: Product) => ({
     `/product-${product.id}-3.png`,
     `/product-${product.id}-4.png`,
   ],
-  fullDescription: product.fullDescription || product.description,
+  fullDescription: product.description,
   specifications: product.specifications,
   features: product.features,
   inStock: true,
@@ -416,8 +416,9 @@ export default function ProductModal({
                       Warranty Included
                     </p>
                     <p className="text-xs sm:text-sm text-gray-600">
-                      {extendedProduct.specifications.Warranty} manufacturer
-                      warranty
+                      {extendedProduct.specifications && !Array.isArray(extendedProduct.specifications)
+                        ? (extendedProduct.specifications as any)?.Warranty || '1 year'
+                        : '1 year'} manufacturer warranty
                     </p>
                   </div>
                 </div>
