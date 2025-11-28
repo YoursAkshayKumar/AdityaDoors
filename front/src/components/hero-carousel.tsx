@@ -158,6 +158,7 @@ export default function HeroCarousel() {
           {carouselItems.map((_, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => setCurrentSlide(index)}
               className={`h-2 w-2 rounded-full transition-colors ${
                 index === currentSlide ? "bg-gold" : "bg-gray-300"
